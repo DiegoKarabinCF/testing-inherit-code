@@ -2,6 +2,17 @@
 
 require 'spec_helper'
 require 'support/shared_examples/bicycle_examples'
+require 'support/shared_examples/bicycle_subclass_examples'
+
+class BikeDouble < Bicycle
+  def default_tire_size
+    0
+  end
+
+  def local_spares
+    { saddle: 'painful' }
+  end
+end
 
 RSpec.describe Bicycle do
   subject { described_class.new(tire_size: 0) }
@@ -10,7 +21,7 @@ RSpec.describe Bicycle do
 
   it_behaves_like :bicycle
 
-  it 'Should force subclasses to implement default tire size' do
+  it 'Should force subclasses to implement default_tire_size' do
     expect { subject.default_tire_size }.to raise_error(NotImplementedError)
   end
 
@@ -23,4 +34,8 @@ RSpec.describe Bicycle do
 
     expect(double.spares).to eq(expected_spares)
   end
+end
+
+RSpec.describe BikeDouble do
+  it_behaves_like :bicycle_subclass
 end
